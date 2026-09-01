@@ -5,72 +5,26 @@
 # Easy to understand version - checks uptime, patches, CPU, and RAM
 # Author: System Administrator
 ################################################################################
+# Color codes for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
 
 # Clear the screen to start fresh
 clear
 
 # Print a nice title
-echo "================================"
-echo "  Linux Server Health Check"
-echo "================================"
-echo ""
+echo -e "${BLUE}"
+echo "╔════════════════════════════════════════════╗"
+echo "║     Linux Server Health Check Report       ║"
+echo "║          Generated: $(date)                ║"
+echo "╚════════════════════════════════════════════╝"
+echo -e "${BLUE}"
 
 ################################################################################
-# 1. CHECK SERVER UPTIME
-################################################################################
-echo "--- SERVER UPTIME ---"
-echo ""
-
-# Get uptime using the uptime command
-uptime_output=$(uptime)
-echo "Uptime Status: $uptime_output"
-
-# Get last boot time
-echo ""
-echo "Last Boot Time:"
-who -b
-
-echo ""
-echo ""
-
-################################################################################
-# 2. CHECK LAST PATCH/UPDATE DATE
-################################################################################
-echo "--- LAST PATCH / UPDATE DATE ---"
-echo ""
-
-# Check if system uses apt (Debian/Ubuntu)
-if [ -f /var/log/apt/history.log ]; then
-    echo "System Type: Debian/Ubuntu (uses apt)"
-    echo ""
-    echo "Last Update Date:"
-    grep "Start-Date:" /var/log/apt/history.log | tail -1
-    echo ""
-    
-# Check if system uses yum (RHEL/CentOS)
-elif [ -f /var/log/yum.log ]; then
-    echo "System Type: RHEL/CentOS (uses yum)"
-    echo ""
-    echo "Last Update Date:"
-    tail -1 /var/log/yum.log
-    echo ""
-    
-# Check if system uses dnf (Fedora)
-elif [ -f /var/log/dnf.rpm.log ]; then
-    echo "System Type: Fedora (uses dnf)"
-    echo ""
-    echo "Last Update Date:"
-    tail -1 /var/log/dnf.rpm.log
-    echo ""
-else
-    echo "Could not find update logs on this system"
-    echo ""
-fi
-
-echo ""
-
-################################################################################
-# 3. SYSTEM DETAILS/INFORMATION
+# 1. SYSTEM DETAILS/INFORMATION
 ################################################################################
 echo "--- SYSTEM DETAILS ---"
 echo ""
@@ -103,7 +57,26 @@ echo ""
 echo ""
 
 ################################################################################
-# 4. CPU INFORMATION & USAGE
+# 2. CHECK SERVER UPTIME
+################################################################################
+echo "--- SERVER UPTIME ---"
+echo ""
+
+# Get uptime using the uptime command
+uptime_output=$(uptime)
+echo "Uptime Status: $uptime_output"
+
+# Get last boot time
+echo ""
+echo "Last Boot Time:"
+who -b
+
+echo ""
+echo ""
+
+
+################################################################################
+# 3. CPU INFORMATION & USAGE
 ################################################################################
 echo "--- CPU INFORMATION ---"
 echo ""
@@ -136,7 +109,7 @@ echo ""
 echo ""
 
 ################################################################################
-# 5. MEMORY (RAM) USAGE
+# 4. MEMORY (RAM) USAGE
 ################################################################################
 echo "--- MEMORY (RAM) USAGE ---"
 echo ""
@@ -179,7 +152,7 @@ echo ""
 echo ""
 
 ################################################################################
-# 6. DETAILED MEMORY BREAKDOWN
+# 5. DETAILED MEMORY BREAKDOWN
 ################################################################################
 echo "--- DETAILED MEMORY INFORMATION ---"
 echo ""
@@ -190,7 +163,7 @@ echo ""
 echo ""
 
 ################################################################################
-# 7. DISK USAGE
+# 6. DISK USAGE
 ################################################################################
 echo "--- DISK USAGE ---"
 echo ""
@@ -202,7 +175,7 @@ echo ""
 echo ""
 
 ################################################################################
-# 8. TOP PROCESSES BY CPU USAGE
+# 7. TOP PROCESSES BY CPU USAGE
 ################################################################################
 echo "--- TOP 5 PROCESSES USING MOST CPU ---"
 echo ""
@@ -212,12 +185,48 @@ echo ""
 echo ""
 
 ################################################################################
-# 9. TOP PROCESSES BY MEMORY USAGE
+# 8. TOP PROCESSES BY MEMORY USAGE
 ################################################################################
 echo "--- TOP 5 PROCESSES USING MOST MEMORY ---"
 echo ""
 ps aux --sort=-%mem | head -6 | awk '{printf "%-15s %8s %s\n", $1, $4"%", $11}'
 echo ""
+
+echo ""
+
+################################################################################
+# 9. CHECK LAST PATCH/UPDATE DATE
+################################################################################
+echo "--- LAST PATCH / UPDATE DATE ---"
+echo ""
+
+# Check if system uses apt (Debian/Ubuntu)
+if [ -f /var/log/apt/history.log ]; then
+    echo "System Type: Debian/Ubuntu (uses apt)"
+    echo ""
+    echo "Last Update Date:"
+    grep "Start-Date:" /var/log/apt/history.log | tail -1
+    echo ""
+    
+# Check if system uses yum (RHEL/CentOS)
+elif [ -f /var/log/yum.log ]; then
+    echo "System Type: RHEL/CentOS (uses yum)"
+    echo ""
+    echo "Last Update Date:"
+    tail -1 /var/log/yum.log
+    echo ""
+    
+# Check if system uses dnf (Fedora)
+elif [ -f /var/log/dnf.rpm.log ]; then
+    echo "System Type: Fedora (uses dnf)"
+    echo ""
+    echo "Last Update Date:"
+    tail -1 /var/log/dnf.rpm.log
+    echo ""
+else
+    echo "Could not find update logs on this system"
+    echo ""
+fi
 
 echo ""
 
@@ -254,8 +263,10 @@ else
 fi
 
 echo ""
-echo "================================"
-echo "Health Check Complete!"
-echo "Generated: $(date)"
-echo "================================"
+echo -e "${GREEN}"
+echo "╔════════════════════════════════════════════╗"
+echo "║    Linux Server Health Check Completed !   ║"
+echo "║          Generated: $(date)                ║"
+echo "╚════════════════════════════════════════════╝"
+echo -e "${GREEN}"
 echo ""
