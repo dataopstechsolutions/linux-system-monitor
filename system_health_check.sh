@@ -3,7 +3,7 @@
 ################################################################################
 # Linux Server Health Check Script
 # Purpose: Check server uptime, patch date, system details, CPU and RAM usage
-# Author: System Administrator
+# Author: Bhagyesh Vanarse
 # Date: 2026-09-01
 ################################################################################
 
@@ -39,13 +39,14 @@ clear
 echo -e "${BLUE}"
 echo "╔════════════════════════════════════════════╗"
 echo "║     Linux Server Health Check Report       ║"
-echo "║          Generated: $(date)       ║"
+echo "║          Generated: $(date)                ║"
 echo "╚════════════════════════════════════════════╝"
 echo -e "${NC}"
 
 # ============================================================================
 # 1. SYSTEM INFORMATION
 # ============================================================================
+
 print_header "SYSTEM INFORMATION"
 
 HOSTNAME=$(hostnamectl 2>/dev/null | grep "Static hostname" | cut -d':' -f2 | xargs)
@@ -78,6 +79,7 @@ print_info "Last Boot: $LAST_BOOT"
 # ============================================================================
 # 2. SYSTEM LAST PATCH/UPDATE DATE
 # ============================================================================
+
 print_header "SYSTEM UPDATES & PATCH INFORMATION"
 
 if [ -f /var/log/apt/history.log ]; then
@@ -116,6 +118,7 @@ fi
 # ============================================================================
 # 3. CPU INFORMATION & USAGE
 # ============================================================================
+
 print_header "CPU INFORMATION & USAGE"
 
 CPU_CORES=$(nproc)
@@ -152,6 +155,7 @@ print_info "\nLoad Average: $LOAD_AVG"
 # ============================================================================
 # 4. MEMORY (RAM) INFORMATION & USAGE
 # ============================================================================
+
 print_header "MEMORY (RAM) INFORMATION & USAGE"
 
 MEM_TOTAL=$(free -h | grep Mem | awk '{print $2}')
@@ -187,6 +191,7 @@ print_info "Buffers: $BUFFERS"
 # ============================================================================
 # 5. DISK USAGE
 # ============================================================================
+
 print_header "DISK USAGE"
 
 df -h | grep -E '^/dev|Filesystem' | awk '{printf "%-25s %10s %10s %10s %5s\n", $1, $2, $3, $4, $5}'
@@ -213,6 +218,7 @@ ip addr show 2>/dev/null | grep -E "^[0-9]+:|inet " | paste - - | sed 's/^/  /'
 # ============================================================================
 # 8. SUMMARY & ALERTS
 # ============================================================================
+
 print_header "SYSTEM HEALTH SUMMARY & ALERTS"
 
 # Check for issues
